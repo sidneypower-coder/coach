@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>職涯卡點診斷</title>
+<meta name="description" content="10 題情境選擇題，約 3 分鐘，找出你的優勢類型，以及這個優勢用過頭時，會在哪裡卡住你。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --stone:#EDEBE6;
+  --stone-2:#E3E0D9;
+  --paper:#F7F6F2;
+  --ink:#262824;
+  --ink-2:#55574F;
+  --line:#C9C6BD;
+  --blue:#3B3BE3;
+  --blue-ink:#3B3BE3;
+  --blue-deep:#2A2AB8;
+  --blue-soft:#DCDCFA;
+  --lime:#D6F25B;
+  --lime-deep:#B9D83A;
+  --on-blue-2:#CFD0FF;
+  --frame:#262824;
+  --block:#262824;
+  --radius-xl:36px;
+  --radius-l:28px;
+  --radius-m:20px;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --font:"Montserrat","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --stone:#1D1E1B; --stone-2:#262723; --paper:#23241F; --ink:#EEECE6; --ink-2:#B3B1A8;
+    --line:#45463F; --blue:#4646E4; --blue-ink:#9C9CFF; --blue-deep:#3636C8; --blue-soft:#2C2C63; --on-blue-2:#DADAFF;
+    --frame:#0F100E; --block:#34362F; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --stone:#1D1E1B; --stone-2:#262723; --paper:#23241F; --ink:#EEECE6; --ink-2:#B3B1A8;
+  --line:#45463F; --blue:#4646E4; --blue-ink:#9C9CFF; --blue-deep:#3636C8; --blue-soft:#2C2C63; --on-blue-2:#DADAFF;
+  --frame:#0F100E; --block:#34362F; color-scheme:dark;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--font);background:var(--frame);color:var(--ink);
+  min-height:100svh;line-height:1.6;-webkit-font-smoothing:antialiased;
+  padding:clamp(0px,2.4vw,32px);
+}
+::selection{background:var(--lime);color:#262824}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--blue-ink);outline-offset:3px;border-radius:12px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- Panel ---------- */
+.panel{
+  position:relative;background:var(--stone);min-height:calc(100svh - 2*clamp(0px,2.4vw,32px));
+  border-radius:clamp(0px,2vw,var(--radius-xl));overflow:hidden;isolation:isolate;
+  display:flex;flex-direction:column;
+}
+.panel::before,.panel::after{ /* soft stone swirls like the reference */
+  content:"";position:absolute;z-index:-1;border-radius:50%;background:var(--paper);pointer-events:none;
+}
+.panel::before{width:70vw;height:52vw;left:-22vw;top:8vh;transform:rotate(-18deg)}
+.panel::after{width:60vw;height:44vw;right:-24vw;top:-18vw;transform:rotate(12deg);opacity:.8}
+
+.wrap{width:min(1120px,100%);margin:0 auto;padding:0 clamp(16px,4vw,48px)}
+
+/* ---------- Nav ---------- */
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0 18px;border-bottom:1.5px solid var(--line)}
+.brand{font-weight:700;font-size:14px;letter-spacing:.08em;text-transform:uppercase;display:flex;gap:10px;align-items:center}
+.brand b{font-weight:800}
+.brand span{color:var(--ink-2);font-weight:500;letter-spacing:.04em}
+.pill{
+  display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--lime-deep);border-radius:999px;
+  padding:5px 14px;font-size:13px;font-weight:700;letter-spacing:.06em;white-space:nowrap;background:color-mix(in srgb,var(--lime) 18%,transparent);
+}
+
+/* ---------- Buttons ---------- */
+.go{
+  display:inline-flex;align-items:center;gap:6px;padding:0;border-radius:999px;text-decoration:none;
+  font-weight:800;font-size:17px;letter-spacing:.02em;
+}
+.go .label{border:2px solid var(--lime-deep);background:var(--lime);color:#262824;border-radius:999px;padding:12px 26px;transition:background .3s var(--ease)}
+.go .disc{
+  width:50px;height:50px;border-radius:50%;background:var(--lime);display:grid;place-items:center;color:#262824;
+  transition:transform .45s var(--ease),background .3s var(--ease);
+}
+.go:hover .disc{transform:rotate(45deg)}
+.go:hover .label,.go:hover .disc{background:var(--lime-deep)}
+.go.dark .label{background:transparent;color:var(--ink);border-color:var(--ink)}
+.go.dark .disc{background:var(--ink);color:var(--stone)}
+.go.dark:hover .label{background:var(--ink);color:var(--stone)}
+.go.dark:hover .disc{background:var(--blue);color:#fff}
+
+.icon{width:22px;height:22px;display:block}
+.star,.spark,.tile .glyph{aspect-ratio:1;height:auto}
+.star{color:var(--blue-ink);display:block}
+.spark{color:var(--lime-deep);display:block}
+
+/* ---------- Screens ---------- */
+.screen{display:none;flex:1;flex-direction:column}
+.screen.on{display:flex}
+
+/* Intro */
+.hero{position:relative;text-align:center;padding:clamp(40px,7vh,84px) 0 clamp(20px,3vh,32px)}
+.hero h1{
+  font-weight:900;font-size:clamp(34px,6.2vw,76px);line-height:1.14;letter-spacing:-.01em;text-wrap:balance;
+}
+.hero h1 .line{display:block}
+.arrowpill{
+  display:inline-grid;place-items:center;vertical-align:middle;width:1.9em;height:.82em;border-radius:999px;
+  background:var(--lime);border:2px solid var(--lime-deep);margin:0 .12em;transform:translateY(-.06em);
+}
+.arrowpill svg{width:62%;height:auto;color:#262824}
+.hero .star{position:absolute;left:4%;top:clamp(34px,6vh,70px);width:clamp(40px,5vw,58px)}
+.hero .spark{position:absolute;right:6%;top:clamp(26px,5vh,56px);width:clamp(34px,4vw,48px)}
+.lede{max-width:34em;margin:22px auto 0;color:var(--ink-2);font-size:clamp(15px,1.6vw,18px);text-wrap:pretty}
+
+.startrow{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-top:clamp(20px,4vh,40px)}
+.facts{font-size:13px;color:var(--ink-2)}
+.facts strong{display:block;color:var(--ink);font-family:"Montserrat","Noto Sans TC",sans-serif;font-weight:800;font-size:17px;line-height:1.35;letter-spacing:.02em}
+.facts strong em{font-style:normal;color:var(--blue-ink)}
+
+.tiles{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(10px,1.6vw,20px);align-items:center;
+  margin:clamp(24px,4vh,40px) 0 clamp(36px,6vh,64px);
+}
+.tile{
+  border-radius:var(--radius-l);padding:clamp(14px,1.8vw,22px);display:flex;flex-direction:column;justify-content:space-between;
+  color:#fff;position:relative;overflow:hidden;aspect-ratio:3/4;
+}
+.tile:nth-child(odd){background:var(--blue)}
+.tile:nth-child(even){background:var(--block)}
+.tile:nth-child(2),.tile:nth-child(3){aspect-ratio:3/4.7}
+.tile .glyph{width:clamp(56px,8vw,104px);height:auto;align-self:center;margin:auto 0}
+.tile .nm{font-weight:900;font-size:clamp(18px,2.1vw,26px);line-height:1.2}
+
+.about{
+  border:1.5px solid var(--line);border-radius:var(--radius-xl);padding:clamp(24px,4vw,44px);
+  display:grid;grid-template-columns:1fr 1.25fr;gap:clamp(20px,4vw,56px);margin-bottom:clamp(28px,5vh,48px);background:color-mix(in srgb,var(--paper) 55%,transparent);
+}
+.about h2{font-weight:900;font-size:clamp(24px,2.8vw,34px);line-height:1.25}
+.about p{color:var(--ink-2);font-size:15px}
+.about p+p{margin-top:12px}
+.about p b{color:var(--ink)}
+.dims{list-style:none;display:grid;gap:0}
+.dims li{display:grid;grid-template-columns:5.2em 1fr;gap:14px;padding:14px 0;border-top:1.5px solid var(--line);font-size:15px}
+.dims li:last-child{border-bottom:1.5px solid var(--line)}
+.dims .t{font-weight:900}
+.dims .d{color:var(--ink-2)}
+.dims .d b{color:var(--ink);font-weight:700}
+
+/* Question */
+.qtop{display:flex;align-items:center;gap:18px;padding:22px 0 0}
+.back{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:14px;color:var(--ink-2);padding:8px 12px 8px 6px;border-radius:999px}
+.back:hover{color:var(--ink);background:var(--stone-2)}
+.back[disabled]{visibility:hidden}
+.back svg{transform:rotate(180deg)}
+.segs{flex:1;display:grid;grid-template-columns:repeat(10,1fr);gap:6px}
+.segs i{height:6px;border-radius:6px;background:var(--line);transition:background .5s var(--ease)}
+.segs i.done{background:var(--blue)}
+.segs i.now{background:var(--lime-deep)}
+
+.qbody{flex:1;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(24px,5vw,72px);align-items:center;padding:clamp(28px,6vh,72px) 0}
+.qnum{font-family:"Montserrat",sans-serif;font-weight:800;font-size:clamp(64px,10vw,132px);line-height:.9;letter-spacing:-.04em;color:var(--blue-ink);font-variant-numeric:tabular-nums}
+.qnum{position:relative;display:inline-block}
+.qspark{position:absolute;right:-.5em;top:-.1em;width:.32em}
+.qnum small{font-size:.28em;color:var(--ink-2);letter-spacing:0;margin-left:.2em}
+.qtext{font-weight:900;font-size:clamp(24px,3.1vw,38px);line-height:1.35;margin-top:22px;text-wrap:pretty}
+.qhint{margin-top:18px;font-size:13px;color:var(--ink-2)}
+.qhint kbd{font-family:"Montserrat",sans-serif;font-weight:700;font-size:11px;border:1.5px solid var(--line);border-radius:6px;padding:1px 6px;margin:0 2px;background:var(--paper)}
+
+.opts{display:grid;gap:12px;list-style:none}
+.opt{
+  width:100%;text-align:left;display:grid;grid-template-columns:44px 1fr;gap:16px;align-items:center;
+  background:var(--paper);border:2px solid var(--line);border-radius:var(--radius-m);padding:16px 20px 16px 16px;
+  font-size:clamp(15px,1.5vw,17px);font-weight:500;line-height:1.5;
+  transition:border-color .25s var(--ease),background .25s var(--ease),transform .35s var(--ease),color .25s var(--ease);
+}
+.opt .k{
+  width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-family:"Montserrat",sans-serif;font-weight:800;font-size:16px;
+  border:2px solid var(--blue-ink);color:var(--blue-ink);transition:all .25s var(--ease)
+}
+.opt:hover{border-color:var(--blue);transform:translateX(4px)}
+.opt:hover .k{background:var(--blue);color:#fff}
+.opt[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.opt[aria-pressed="true"] .k{background:var(--lime);border-color:var(--lime);color:#262824}
+.opt.press{transform:scale(.985)}
+
+.qstage{transition:opacity .45s var(--ease),transform .55s var(--ease),filter .45s var(--ease)}
+.qstage.out{opacity:0;transform:translateY(-28px);filter:blur(4px)}
+.qstage.in{opacity:0;transform:translateY(36px)}
+.qstage.out.rev{transform:translateY(28px)}
+.qstage.in.rev{transform:translateY(-36px)}
+
+/* Result */
+.rhead{position:relative;text-align:center;padding:clamp(40px,7vh,80px) 0 clamp(24px,4vh,40px)}
+.rhead h1{font-weight:900;font-size:clamp(46px,9vw,112px);line-height:1.08;margin-top:6px}
+.namepill{display:inline-block;border:3px solid var(--lime-deep);border-radius:999px;padding:.02em .42em .06em;background:color-mix(in srgb,var(--lime) 22%,transparent)}
+.rhead .sum{margin:18px auto 0;max-width:30em;font-size:clamp(16px,1.8vw,20px);font-weight:500;color:var(--ink-2);text-wrap:balance}
+.rhead .sum b{color:var(--ink);font-weight:900}
+.rhead .star{position:absolute;left:1%;top:22px;width:clamp(36px,5vw,56px)}
+.rhead .spark{position:absolute;right:2%;top:26px;width:clamp(30px,4vw,46px)}
+
+.ties{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin:22px auto 0;font-size:14px;color:var(--ink-2)}
+.ties .tl{flex-basis:100%;text-align:center}
+.ties[hidden]{display:none}
+.tj{white-space:nowrap}
+.times{color:var(--blue-ink);margin:0 .12em;font-weight:800}
+.ties button{border:2px solid var(--line);border-radius:999px;padding:6px 16px;font-weight:700;color:var(--ink);background:var(--paper)}
+.ties button[aria-pressed="true"]{background:var(--ink);color:var(--stone);border-color:var(--ink)}
+
+.rgrid{display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"s o" "t t";gap:clamp(12px,1.6vw,20px)}
+.card{border-radius:var(--radius-l);padding:clamp(22px,3vw,36px)}
+.card .ch{font-weight:900;font-size:clamp(19px,2vw,24px);line-height:1.3;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.card .ch .disc{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex:none}
+.c-str{grid-area:s;background:var(--blue);color:#fff}
+.c-str .ch .disc{background:#fff;color:#3B3BE3}
+.c-str ul{list-style:none;display:grid;gap:0;margin-top:8px}
+.c-str li{padding:16px 0;border-top:1.5px solid rgba(255,255,255,.28);font-size:clamp(16px,1.6vw,18px);font-weight:500;display:grid;grid-template-columns:28px 1fr;gap:10px}
+.c-str li svg{width:20px;height:20px;margin-top:4px;color:var(--lime)}
+.c-str .big{font-family:"Montserrat",sans-serif;font-weight:800;font-size:clamp(56px,7vw,92px);line-height:1;color:var(--lime);letter-spacing:-.03em;margin-top:18px}
+.c-str .big small{display:block;font-family:var(--font);font-size:14px;font-weight:500;color:var(--on-blue-2);letter-spacing:0;margin-top:6px}
+.c-over{grid-area:o;background:var(--block);color:#F1EFE9}
+.c-over .ch{color:var(--lime)}
+.c-over .ch .disc{background:var(--lime);color:#262824}
+.c-over p{font-size:16px;color:#D9D6CE}
+.c-over .tag{display:inline-block;margin-top:16px;border:1.5px solid var(--lime);color:var(--lime);border-radius:999px;padding:4px 14px;font-size:14px;font-weight:700}
+.c-theory{grid-area:t;background:var(--paper);border:1.5px solid var(--line);display:grid;grid-template-columns:1fr 1fr;column-gap:clamp(20px,4vw,56px);align-items:start}
+.c-theory .ch{grid-column:1/-1}
+.c-theory .bars{margin-top:0}
+@media (max-width:860px){.c-theory{grid-template-columns:1fr}.c-theory .bars{margin-top:18px}}
+.c-theory p{font-size:15px;color:var(--ink-2)}
+.bars{display:grid;gap:10px;margin-top:18px}
+.bar{display:grid;grid-template-columns:4.6em 1fr 1.6em;gap:10px;align-items:center;font-size:13px;font-weight:700}
+.bar .tr{height:10px;border-radius:10px;background:var(--stone-2);overflow:hidden}
+.bar .fl{display:block;height:100%;border-radius:10px;background:var(--ink-2);transition:width 1.1s var(--ease)}
+@starting-style{.bar .fl{width:0}}
+.bar.me .fl{background:var(--blue)}
+.bar .n{font-family:"Montserrat",sans-serif;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.bar.me .n{color:var(--blue-ink)}
+
+.ask{position:relative;text-align:center;padding:clamp(48px,9vh,96px) 0 clamp(28px,5vh,48px)}
+.ask q{display:block;quotes:none;font-weight:900;font-size:clamp(26px,4.2vw,50px);line-height:1.3;margin:14px auto 0;max-width:18em;text-wrap:balance}
+.ask q mark{background:none;color:var(--blue-ink)}
+.ask .star{position:absolute;width:clamp(30px,4vw,48px)}
+.ask .star.a{left:6%;top:30%}
+.ask .star.b{right:8%;bottom:8%}
+
+.cta{
+  border-radius:var(--radius-xl);background:var(--blue);color:#fff;padding:clamp(24px,4vw,44px);
+  display:grid;grid-template-columns:auto 1fr auto;gap:clamp(16px,3vw,32px);align-items:center;margin-bottom:18px;
+}
+.cta .cup{width:64px;height:64px;border-radius:50%;background:var(--lime);display:grid;place-items:center;color:#262824}
+.cta .cup svg{width:32px;height:32px}
+.cta p{font-size:clamp(17px,1.9vw,21px);font-weight:700;line-height:1.5;text-wrap:pretty}
+.cta p small{display:block;margin-top:6px;font-size:14px;font-weight:500;color:var(--on-blue-2)}
+.cta .go .label{white-space:nowrap}
+.go.soon{cursor:default}
+.go.soon .label{background:transparent;color:#fff;border-style:dashed;border-color:var(--lime)}
+.go.soon .disc{background:transparent;border:2px dashed var(--lime);color:var(--lime)}
+.go.soon:hover .label{background:transparent}
+.go.soon:hover .disc{transform:none;background:transparent}
+.coach{border:1.5px dashed var(--line);border-radius:var(--radius-l);padding:18px 24px;font-size:15px;color:var(--ink-2);margin-bottom:18px}
+.coach b{color:var(--ink)}
+
+.rfoot{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;margin:26px 0 0;padding:22px 0 28px;border-top:1.5px solid var(--line);font-size:13px;color:var(--ink-2)}
+.rfoot .disc-note{max-width:44em}
+.restart{font-weight:700;color:var(--ink);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px}
+
+.foot{margin-top:auto;display:flex;justify-content:space-between;gap:16px;padding:20px 0 26px;border-top:1.5px solid var(--line);font-size:13px;color:var(--ink-2)}
+.foot b{color:var(--ink)}
+
+.namepill.pop{animation:pop .9s var(--ease)}
+@keyframes pop{from{transform:scale(.9) rotate(-2deg)}to{transform:none}}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .qbody{grid-template-columns:1fr;align-items:start;gap:24px;padding-top:28px}
+  .qtext{margin-top:12px}
+  .qhint{display:none}
+  .about{grid-template-columns:1fr}
+  .rgrid{grid-template-columns:1fr;grid-template-areas:"s" "o" "t"}
+  .cta{grid-template-columns:1fr;text-align:left}
+  .cta .cup{width:52px;height:52px}
+}
+@media (max-width:600px){
+  body{padding:8px}
+  .panel{border-radius:24px;min-height:calc(100svh - 16px)}
+  .brand span{display:none}
+  .tiles{grid-template-columns:repeat(2,1fr)}
+  .tile,.tile:nth-child(2),.tile:nth-child(3){aspect-ratio:auto;min-height:0;gap:18px}
+  .tile .glyph{width:44px;margin:0;align-self:flex-start}
+  .rhead .star{left:0;top:10px;bottom:auto;width:30px}
+  .rhead .spark{right:0;top:14px;width:26px}
+  .ask .star.a{left:0;top:18%}
+  .ask .star.b{right:0;bottom:6%}
+  .startrow{flex-direction:column;align-items:stretch}
+  .startrow .go{align-self:stretch}
+  .startrow .go .label{flex:1;text-align:center}
+  .hero{padding-top:64px}
+  .hero .star{left:0;top:16px;width:30px}
+  .hero .spark{right:0;top:18px;width:26px}
+  .opt{grid-template-columns:38px 1fr;gap:12px;padding:14px 16px 14px 12px}
+  .opt .k{width:38px;height:38px;font-size:14px}
+  .opt:hover{transform:none}
+  .qnum{font-size:64px}
+  .cta .go{align-self:stretch}
+  .cta .go .label{flex:1;text-align:center}
+  .foot{flex-direction:column;gap:4px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  .qstage.out,.qstage.in{transform:none;filter:none}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-ne" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-long" viewBox="0 0 64 16"><path d="M3 8h55M50 2l7 6-7 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-star" viewBox="0 0 48 48"><g stroke="currentColor" stroke-width="6.5" stroke-linecap="round"><path d="M24 4v40"/><path d="M6.7 14 41.3 34"/><path d="M6.7 34 41.3 14"/></g></symbol>
+    <symbol id="i-spark" viewBox="0 0 48 48"><path d="M20 6c1.6 9 4 11.4 13 13-9 1.6-11.4 4-13 13-1.6-9-4-11.4-13-13 9-1.6 11.4-4 13-13Z" fill="currentColor"/><path d="M38 28c.8 4.4 2 5.6 6.4 6.4-4.4.8-5.6 2-6.4 6.4-.8-4.4-2-5.6-6.4-6.4 4.4-.8 5.6-2 6.4-6.4Z" fill="currentColor"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-cup" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h18v7a7 7 0 0 1-7 7h-4a7 7 0 0 1-7-7v-7Z"/><path d="M23 14h2a3.5 3.5 0 0 1 0 7h-2.4"/><path d="M11 4.5c-1 1.3 1 2.2 0 3.5M16 4.5c-1 1.3 1 2.2 0 3.5"/></g></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 7v6"/><path d="M12 17h.01"/></g></symbol>
+    <!-- type glyphs -->
+    <symbol id="g-G" viewBox="0 0 96 96"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><circle cx="48" cy="48" r="36"/><path d="m60 36-8 16-16 8 8-16 16-8Z" fill="var(--lime)" stroke="var(--lime)"/><path d="M48 12v7M48 77v7M12 48h7M77 48h7"/></g></symbol>
+    <symbol id="g-K" viewBox="0 0 96 96"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><circle cx="34" cy="48" r="20"/><circle cx="62" cy="48" r="20" stroke="var(--lime)"/><circle cx="48" cy="18" r="5" fill="currentColor"/><circle cx="48" cy="78" r="5" fill="currentColor"/></g></symbol>
+    <symbol id="g-H" viewBox="0 0 96 96"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 78h20V60h20V42h20V24"/><path d="M62 24h12v12" stroke="var(--lime)"/><circle cx="24" cy="66" r="5" fill="var(--lime)" stroke="var(--lime)"/></g></symbol>
+    <symbol id="g-X" viewBox="0 0 96 96"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><rect x="20" y="14" width="56" height="70" rx="8"/><path d="m30 34 5 5 9-10M30 56l5 5 9-10" stroke="var(--lime)"/><path d="M52 36h14M52 58h14"/></g></symbol>
+  </defs>
+</svg>
+
+<main class="panel">
+  <div class="wrap">
+    <header class="nav">
+      <a class="brand" href="../" style="text-decoration:none"><b>Sidney</b><span>· 職涯教練</span></a>
+      <span class="pill" id="navPill">3 分鐘 · 10 題</span>
+    </header>
+  </div>
+
+  <!-- ============ INTRO ============ -->
+  <section class="screen on" id="intro" aria-labelledby="introTitle">
+    <div class="wrap">
+      <div class="hero">
+        <svg class="star" aria-hidden="true"><use href="#i-star"/></svg>
+        <svg class="spark" aria-hidden="true"><use href="#i-spark"/></svg>
+        <h1 id="introTitle">
+          <span class="line">最近工作卡卡的？</span>
+          <span class="line">卡住你的 <span class="arrowpill" aria-hidden="true"><svg viewBox="0 0 64 16"><use href="#i-long"/></svg></span> 可能</span>
+          <span class="line">正是你的優勢</span>
+        </h1>
+        <p class="lede">10 題情境選擇題，約 3 分鐘，找出你的優勢類型，以及這個優勢用過頭時，會在哪裡卡住你。</p>
+      </div>
+
+      <div class="startrow">
+        <div class="facts">
+          <strong>每題選一個最接近你的，<br>沒有標準答案。</strong>
+        </div>
+        <button class="go" id="startBtn" type="button">
+          <span class="label">開始診斷</span>
+          <span class="disc"><svg class="icon"><use href="#i-ne"/></svg></span>
+        </button>
+      </div>
+
+      <div class="tiles" aria-label="四種類型">
+        <div class="tile"><svg class="glyph" aria-hidden="true"><use href="#g-G"/></svg><div><div class="nm">探索者</div></div></div>
+        <div class="tile"><svg class="glyph" aria-hidden="true"><use href="#g-K"/></svg><div><div class="nm">連結者</div></div></div>
+        <div class="tile"><svg class="glyph" aria-hidden="true"><use href="#g-H"/></svg><div><div class="nm">實踐者</div></div></div>
+        <div class="tile"><svg class="glyph" aria-hidden="true"><use href="#g-X"/></svg><div><div class="nm">審慎者</div></div></div>
+      </div>
+
+      <div class="about">
+        <div>
+          <h2>每一種卡點，<br>都是優勢用過頭</h2>
+          <p style="margin-top:14px">問卷依據 <b>Savickas 生涯建構論</b>中的「生涯適應力」四個維度設計（對應量表 CAAS，Savickas &amp; Porfeli, 2012）。題目依概念自行撰寫，未使用原量表題目。</p>
+        </div>
+        <ul class="dims">
+          <li><span class="t">探索者</span><span class="d"><b>敏銳、誠實、開放</b><br>用過頭時：資訊越收越多，方向越來越模糊</span></li>
+          <li><span class="t">連結者</span><span class="d"><b>重視關係、善於傾聽</b><br>用過頭時：把別人的意見當成答案</span></li>
+          <li><span class="t">實踐者</span><span class="d"><b>行動力、耐挫</b><br>用過頭時：用同一套方法加倍努力</span></li>
+          <li><span class="t">審慎者</span><span class="d"><b>周全、準備充分</b><br>用過頭時：把準備當成前進</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="wrap" style="margin-top:auto"><footer class="foot"><span>本問卷用於自我覺察，並非標準化心理測驗。</span><span><b>Sidney</b> · 2026</span></footer></div>
+  </section>
+
+  <!-- ============ QUESTION ============ -->
+  <section class="screen" id="quiz" aria-label="問卷">
+    <div class="wrap" style="flex:1;display:flex;flex-direction:column">
+      <div class="qtop">
+        <button class="back" id="backBtn" type="button"><svg class="icon"><use href="#i-arrow"/></svg>上一題</button>
+        <div class="segs" id="segs" role="progressbar" aria-valuemin="0" aria-valuemax="10" aria-valuenow="1" aria-label="進度"></div>
+      </div>
+      <div class="qbody qstage" id="stage">
+        <div>
+          <div class="qnum" aria-hidden="true"><span id="qn">01</span><small>/ 10</small><svg class="spark qspark"><use href="#i-spark"/></svg></div>
+          <h2 class="qtext" id="qtext"></h2>
+          <p class="qhint">按 <kbd>A</kbd><kbd>B</kbd><kbd>C</kbd><kbd>D</kbd> 直接作答，<kbd>←</kbd> <span id="backHint">回上一題</span></p>
+        </div>
+        <ul class="opts" id="opts" role="group" aria-labelledby="qtext"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RESULT ============ -->
+  <section class="screen" id="result" aria-labelledby="rName">
+    <div class="wrap">
+      <div class="rhead">
+        <svg class="star" aria-hidden="true"><use href="#i-star"/></svg>
+        <svg class="spark" aria-hidden="true"><use href="#i-spark"/></svg>
+                <h1 id="rTitle">你是 <span class="namepill">探索者</span></h1>
+        <div class="ties" id="ties" hidden></div>
+        <p class="sum" id="rSum"></p>
+      </div>
+
+      <div class="rgrid">
+        <article class="card c-str">
+          <h2 class='ch'>你的優勢</h2>
+          <ul id="rStr"></ul>
+        </article>
+        <article class="card c-over">
+          <h2 class='ch'>當優勢用過頭 <span class="disc"><svg class="icon"><use href="#i-warn"/></svg></span></h2>
+          <p id="rOver"></p>
+          <span class="tag" id="rTag"></span>
+        </article>
+        <article class="card c-theory">
+          <h2 class='ch'>理論怎麼看你</h2>
+          <p id="rTheory"></p>
+          <div class="bars" id="bars" aria-label="四個維度的選擇次數"></div>
+        </article>
+      </div>
+
+      <div class="ask">
+        <svg class="star a" aria-hidden="true"><use href="#i-star"/></svg>
+        <svg class="star b" aria-hidden="true"><use href="#i-star"/></svg>
+        <h2 class="sr">你要回答的問題</h2>
+        <q id="rAsk"></q>
+      </div>
+
+      <div class="cta">
+        <span class="cup" aria-hidden="true"><svg><use href="#i-cup"/></svg></span>
+        <p id="rCta"></p>
+        <a class="go" id="ctaLink" href="#coffee-chat" target="_blank" rel="noopener">
+          <span class="label">預約 coffee chat</span>
+          <span class="disc"><svg class="icon"><use href="#i-ne"/></svg></span>
+        </a>
+      </div>
+      <p class="coach" id="rCoach" hidden></p>
+
+      <footer class="rfoot">
+        <span class="disc-note">本問卷參考 Savickas 生涯適應力理論的四個維度設計，用於自我覺察，並非標準化心理測驗。</span>
+        <button class="restart" id="restartBtn" type="button">重新作答</button>
+      </footer>
+    </div>
+  </section>
+</main>
+
+<script>
+/* 預約連結：之後換成你的 Calendly／LINE／表單網址 */
+const COFFEE_CHAT_URL = "https://calendar.app.google/b8c6mw69keJqTtVT8";
+
+const TYPES = {
+  G:{ name:"探索者", dim:"關注", en:"Concern",
+      sum:"你對「不對勁」很敏銳，<b>只是資訊收得越多，方向反而越模糊。</b>",
+      str:["對「不對勁」很敏銳，不會假裝喜歡一份不適合的工作","誠實面對自己，不願意隨便將就","對新資訊開放，願意多方了解各種可能"],
+      theory:"生涯適應力理論中的「關注」，指的是對未來有想法、並為它做準備。你已經具備最難培養的覺察力，下一步是把「不要什麼」轉成「要什麼」。",
+      over:"敏銳和開放用過頭，會變成不斷收集資訊。測驗、文章、課程越看越多，方向反而越來越模糊。",
+      tag:"資訊越收越多，方向越來越模糊",
+      ask:"你說不知道要什麼，那你確定知道自己<mark>「不要」</mark>什麼嗎？",
+      cta:"帶著這個問題來 coffee chat，<br>30 分鐘幫你把「不要」整理成方向。" },
+  K:{ name:"連結者", dim:"控制", en:"Control",
+      sum:"你很會聽、也很重視關係，<b>只是容易把別人的意見當成答案。</b>",
+      str:["重視關係，做決定時會把身邊的人放進來考慮","善於傾聽，能從不同觀點看同一件事","身邊通常有一群願意給你意見的人，這是很多人沒有的資源"],
+      theory:"生涯適應力理論中的「控制」，指的是覺得決定權在自己手上，並願意為選擇負責。你已經很會蒐集別人的觀點，下一步是建立自己的判斷標準，讓這些意見成為參考，而不是答案。",
+      over:"重視他人意見用過頭，會變成問了一輪又一輪。最後做的是大家都同意、但你自己沒那麼想要的選擇。",
+      tag:"把別人的意見當成答案",
+      ask:"你在等誰點頭？如果那個人<mark>永遠不點頭</mark>，你還做不做？",
+      cta:"帶著這個問題來 coffee chat，<br>一起找出你自己的判斷標準。" },
+  H:{ name:"實踐者", dim:"好奇", en:"Curiosity",
+      sum:"大多數人還在想的時候，你已經做了，<b>只是一直用同一套方法加倍努力。</b>",
+      str:["行動力強，大多數人還在想的時候，你已經做了","耐挫，失敗了會再試，不輕易放棄","有真實經驗，你的判斷來自做過，而不是想像"],
+      theory:"生涯適應力理論中的「好奇」，指的是探索自己和環境的其他可能。你已經有最稀缺的行動力，下一步是在行動之前多問一句「還有沒有別條路」。",
+      over:"行動力和毅力用過頭，會變成用同一套方法加倍努力。努力沒有少，但一直在同一條路上加速，結果自然差不多。",
+      tag:"用同一套方法加倍努力",
+      ask:"你換過的是<mark>方法</mark>，還是只換過場景？",
+      cta:"帶著你做過的嘗試來 coffee chat，<br>我們一起看是哪一段出了問題。",
+      coach:"如果你想要的不只是一次釐清，而是有人陪你把新方法做起來，我也有<b>一對一的教練方案</b>，聊完可以一起評估適不適合你。" },
+  X:{ name:"審慎者", dim:"信心", en:"Confidence",
+      sum:"你想得周全、準備充分，<b>只是容易把準備當成前進。</b>",
+      str:["思考周全，會先看清風險再行動","準備充分，很少因為準備不足而犯錯","有方向感，其實已經知道自己想往哪裡走"],
+      theory:"生涯適應力理論中的「信心」，指的是相信自己能解決問題、把計畫付諸行動。你已經具備清楚的方向和扎實的準備，下一步是給自己一個夠小、夠安全的第一步。",
+      over:"周全和謹慎用過頭，會變成把準備當成前進。研究、上課、規劃都在做，只是一直沒有真正開始。",
+      tag:"把準備當成前進",
+      ask:"你在等的那個資訊，拿到之後<mark>真的會讓你行動</mark>嗎？",
+      cta:"帶著這個問題來 coffee chat，<br>30 分鐘幫你找出一個本週就能做的最小行動。" }
+};
+
+const Q = [
+  ["有人問你「五年後想做什麼？」你的第一個反應是：",[
+    ["腦中一片空白，其實沒認真想過","G"],["有想法，但會先說「看情況」，怕講了做不到","X"],
+    ["說得出來，但通常是家人或主管期待的那個答案","K"],["說得出來，而且跟五年前的答案差不多，只是一直沒達成","H"]]],
+  ["看到一個不錯的職缺，你會：",[
+    ["研究很久，最後覺得自己條件還不夠，沒投","X"],["先傳給朋友或另一半，問「你覺得我適合嗎？」","K"],
+    ["直接投，用同一份履歷，已經投過很多家","H"],["不確定這是不是自己要的，先存起來","G"]]],
+  ["週日晚上想到明天要上班，你心裡的聲音比較接近：",[
+    ["「不想再這樣下去，但也不知道要換成什麼」","G"],["「我已經很努力了，為什麼還是沒起色」","H"],
+    ["「大家都說這份工作不錯，應該是我想太多」","K"],["「我應該要改變，但現在還不是時候」","X"]]],
+  ["做重要決定（轉職、進修、搬家）時，你最花時間的是：",[
+    ["反覆評估風險，想確定不會失敗","X"],["搞清楚自己到底想要什麼","G"],
+    ["照以前的經驗決定，很少考慮其他可能","H"],["徵詢身邊的人，直到大家都覺得 OK","K"]]],
+  ["你上一次學新東西（課程、技能），是因為：",[
+    ["主管或朋友推薦","K"],["想等準備好再行動，所以先上課充實自己","X"],
+    ["很久沒學新東西了，都靠現有的經驗在撐","H"],["覺得該學點什麼，但沒有明確目標","G"]]],
+  ["聽到朋友成功轉職，你的第一個念頭是：",[
+    ["「我也試過，但就是沒成功」","H"],["「我是不是也該跟他一樣？」","K"],
+    ["替他開心，但不知道自己要轉去哪","G"],["羨慕，但覺得自己沒那個能力或運氣","X"]]],
+  ["如果明天就能辭職、不用擔心錢，你會：",[
+    ["要先看家人會不會支持","K"],["先休息，因為真的不知道接下來要做什麼","G"],
+    ["還是會猶豫，擔心之後回不去","X"],["找一份差不多的工作，換個環境就好","H"]]],
+  ["工作遇到瓶頸時，你最常做的是：",[
+    ["更努力、多加班，相信撐過去就好","H"],["想到很多可以試的方法，但一個都還沒開始","X"],
+    ["覺得很煩，但說不出具體卡在哪","G"],["找人討論，希望對方給我一個答案","K"]]],
+  ["你心裡有沒有一件「一直想做但還沒做」的事？",[
+    ["有，但身邊的人不太看好","K"],["有，也試過幾次，但沒成功就放下了","H"],
+    ["有，但總覺得自己還沒準備好","X"],["沒有特別想做的，這才是問題","G"]]],
+  ["過去一年，你為職涯改變做過最具體的事是：",[
+    ["實際行動了，但結果不如預期","H"],["還沒有，因為不確定要改什麼","G"],
+    ["跟很多人討論過","K"],["做了很多研究和規劃，還沒執行","X"]]]
+];
+const ORDER = ["G","K","H","X"];
+const LETTERS = ["A","B","C","D"];
+const KEY = "career-quiz-v1";
+
+const $ = s => document.querySelector(s);
+const screens = {intro:$("#intro"),quiz:$("#quiz"),result:$("#result")};
+let answers = new Array(10).fill(null);
+let idx = 0, busy = false;
+
+const store = {
+  get(){ try{ return JSON.parse(localStorage.getItem(KEY)||"null"); }catch(e){ return null; } },
+  set(v){ try{ localStorage.setItem(KEY, JSON.stringify(v)); }catch(e){} },
+  clear(){ try{ localStorage.removeItem(KEY); }catch(e){} }
+};
+
+function show(name){
+  Object.entries(screens).forEach(([k,el])=>el.classList.toggle("on",k===name));
+  $("#navPill").textContent = name==="quiz" ? "約 3 分鐘" : name==="result" ? "診斷完成" : "3 分鐘 · 10 題";
+  window.scrollTo({top:0,behavior:"instant"});
+}
+
+const segs = $("#segs");
+for(let i=0;i<10;i++) segs.appendChild(document.createElement("i"));
+
+function renderQ(){
+  const [text,opts] = Q[idx];
+  $("#qn").textContent = String(idx+1).padStart(2,"0");
+  $("#qtext").textContent = text;
+  const ul = $("#opts"); ul.innerHTML = "";
+  opts.forEach(([label],i)=>{
+    const li = document.createElement("li");
+    const b = document.createElement("button");
+    b.type="button"; b.className="opt";
+    b.setAttribute("aria-pressed", answers[idx]===i ? "true":"false");
+    b.innerHTML = `<span class="k" aria-hidden="true">${LETTERS[i]}</span><span></span>`;
+    b.lastChild.textContent = label;
+    b.setAttribute("aria-label", `${LETTERS[i]}. ${label}`);
+    b.addEventListener("click",()=>choose(i));
+    li.appendChild(b); ul.appendChild(li);
+  });
+  [...segs.children].forEach((s,i)=>{ s.className = i<idx ? "done" : i===idx ? "now" : ""; });
+  segs.setAttribute("aria-valuenow", idx+1);
+  $("#backBtn").lastChild.textContent = idx===0 ? "回首頁" : "上一題";
+  $("#backHint").textContent = idx===0 ? "回首頁" : "回上一題";
+}
+
+function transition(dir, fn){
+  const st = $("#stage");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(reduce){ fn(); return Promise.resolve(); }
+  return new Promise(res=>{
+    st.classList.toggle("rev",dir<0);
+    st.classList.add("out");
+    setTimeout(()=>{
+      fn();
+      st.classList.remove("out"); st.classList.add("in");
+      void st.offsetWidth; /* commit the start state without waiting on a frame */
+      st.classList.remove("in");
+      setTimeout(()=>{ st.classList.remove("rev"); res(); },420);
+    },300);
+  });
+}
+
+async function choose(i){
+  if(busy) return; busy = true;
+  answers[idx] = i;
+  const btns = $("#opts").querySelectorAll(".opt");
+  btns.forEach((b,j)=>b.setAttribute("aria-pressed", j===i ? "true":"false"));
+  btns[i].classList.add("press"); setTimeout(()=>btns[i].classList.remove("press"),160);
+  store.set({answers,idx:Math.min(idx+1,9)});
+  await new Promise(r=>setTimeout(r,280));
+  if(idx<9){ await transition(1,()=>{ idx++; renderQ(); focusFirst(); }); }
+  else { finish(); }
+  busy = false;
+}
+
+async function goBack(){
+  if(busy) return;
+  if(idx===0){ show("intro"); return; }
+  busy = true;
+  await transition(-1,()=>{ idx--; renderQ(); focusFirst(); });
+  busy = false;
+}
+function focusFirst(){
+  const sel = $("#opts .opt[aria-pressed='true']") || $("#opts .opt");
+  if(sel && document.activeElement && document.activeElement.classList.contains("opt")) sel.focus({preventScroll:true});
+}
+
+function score(){
+  const s = {G:0,K:0,H:0,X:0};
+  answers.forEach((a,q)=>{ if(a!==null) s[Q[q][1][a][1]]++; });
+  const max = Math.max(...Object.values(s));
+  const tied = ORDER.filter(k=>s[k]===max);
+  const q10 = answers[9]!==null ? Q[9][1][answers[9]][1] : null;
+  let types;
+  if(tied.length===1) types = tied;
+  else if(q10 && tied.includes(q10)) types = [q10];
+  else types = tied;
+  return {s,types};
+}
+
+function renderResult(key,s){
+  const t = TYPES[key];
+  $("#rSum").innerHTML = t.sum;
+  const ul = $("#rStr"); ul.innerHTML = "";
+  t.str.forEach(x=>{ const li=document.createElement("li"); li.innerHTML=`<svg aria-hidden="true"><use href="#i-check"/></svg><span></span>`; li.lastChild.textContent=x; ul.appendChild(li); });
+  $("#rOver").textContent = t.over;
+  $("#rTag").textContent = t.tag;
+  $("#rTheory").textContent = t.theory;
+  const bars = $("#bars"); bars.innerHTML = "";
+  ORDER.forEach(k=>{
+    const d = document.createElement("div");
+    d.className = "bar" + (k===key ? " me":"");
+    d.innerHTML = `<span>${TYPES[k].name}</span><span class="tr"><span class="fl" style="width:${s[k]*10}%"></span></span><span class="n">${s[k]}</span>`;
+    d.setAttribute("aria-label", `${TYPES[k].name}（${TYPES[k].dim}）${s[k]} 題`);
+    bars.appendChild(d);
+  });
+  $("#rAsk").innerHTML = t.ask;
+  $("#rCta").innerHTML = t.cta.replace("<br>","<br class='br'>");
+  const coach = $("#rCoach");
+  if(t.coach){ coach.innerHTML = t.coach; coach.hidden = false; } else coach.hidden = true;
+}
+
+function finish(){
+  const {s,types} = score();
+  const ties = $("#ties");
+  if(types.length>1){
+    ties.hidden = false;
+    ties.innerHTML = `<span class="tl">你同時接近這 ${types.length} 型，切換看看哪一型更像你：</span>`;
+    types.forEach((k,i)=>{
+      const b = document.createElement("button"); b.type="button"; b.textContent = TYPES[k].name;
+      b.setAttribute("aria-pressed", i===0 ? "true":"false");
+      b.addEventListener("click",()=>{ ties.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false")); b.setAttribute("aria-pressed","true"); renderResult(k,s); });
+      ties.appendChild(b);
+    });
+  } else ties.hidden = true;
+  const title = $("#rTitle");
+  title.innerHTML = "你是 " + types.map((k,i)=>`${i?'<span class="tj"><span class="times" aria-label="與">×</span>':''}<span class="namepill pop">${TYPES[k].name}</span>${i?'</span>':''}`).join('');
+  title.style.fontSize = types.length>1 ? "clamp(34px,6.4vw,84px)" : "";
+  renderResult(types[0],s);
+  store.set({answers,idx:9,done:true});
+  show("result");
+}
+
+(function(){
+  const a = $("#ctaLink");
+  if(COFFEE_CHAT_URL.startsWith("#")){
+    a.removeAttribute("target"); a.setAttribute("aria-disabled","true"); a.classList.add("soon");
+    a.querySelector(".label").textContent = "預約連結即將開放";
+    a.querySelector(".disc").remove();
+    a.addEventListener("click",e=>e.preventDefault());
+  } else a.href = COFFEE_CHAT_URL;
+})();
+$("#startBtn").addEventListener("click",()=>{ idx = 0; renderQ(); show("quiz"); setTimeout(()=>$("#opts .opt")?.focus({preventScroll:true}),50); });
+$("#backBtn").addEventListener("click",goBack);
+$("#restartBtn").addEventListener("click",()=>{ answers = new Array(10).fill(null); idx=0; store.clear(); show("intro"); });
+
+document.addEventListener("keydown",e=>{
+  if(e.metaKey||e.ctrlKey||e.altKey) return;
+  if(screens.quiz.classList.contains("on")){
+    const k = e.key.toUpperCase();
+    const i = LETTERS.indexOf(k) >= 0 ? LETTERS.indexOf(k) : ["1","2","3","4"].indexOf(e.key);
+    if(i>=0){ e.preventDefault(); choose(i); }
+    else if(e.key==="ArrowLeft"||e.key==="Backspace"){ e.preventDefault(); goBack(); }
+  } else if(screens.intro.classList.contains("on") && e.key==="Enter" && document.activeElement===document.body){
+    $("#startBtn").click();
+  }
+});
+
+/* 繼續上次進度 */
+(function resume(){
+  const saved = store.get();
+  if(!saved || !Array.isArray(saved.answers) || saved.answers.length!==10) return;
+  answers = saved.answers;
+  if(saved.done && answers.every(a=>a!==null)){ finish(); return; }
+  if(answers.some(a=>a!==null)){
+    const b = $("#startBtn .label"); b.textContent = "繼續作答";
+    $("#startBtn").addEventListener("click",()=>{ idx = Math.max(0,answers.findIndex(a=>a===null)); renderQ(); },{once:false});
+  }
+})();
+</script>
+</body>
+</html>
+
+</body></html>
