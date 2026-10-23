@@ -112,18 +112,6 @@ section{padding:clamp(26px,4.6vh,48px) 0}
 .quiz p{color:var(--ink-2);margin-top:8px;max-width:36em;font-size:15.5px}
 .quiz p b{color:var(--ink)}
 
-/* posts */
-.sect-h{font-weight:900;font-size:clamp(20px,2.4vw,27px);line-height:1.35;margin-bottom:clamp(18px,2.6vh,26px);display:flex;align-items:center;gap:14px}
-.sect-h .rule{flex:1;height:1.5px;background:var(--line);border-radius:2px}
-.posts{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,1.8vw,20px)}
-.posts a{display:flex;flex-direction:column;gap:10px;height:100%;text-decoration:none;background:var(--paper);border:1.5px solid var(--line);border-radius:var(--radius-m);padding:clamp(18px,2.4vw,26px);transition:transform .4s var(--ease),border-color .3s var(--ease)}
-.posts a:hover{transform:translateY(-4px);border-color:var(--blue-ink)}
-.posts h3{font-weight:900;font-size:clamp(16px,1.7vw,18px);line-height:1.5}
-.posts p{color:var(--ink-2);font-size:14.5px;flex:1}
-.posts .read{display:inline-flex;align-items:center;gap:6px;font-family:"Montserrat",var(--font);font-weight:700;font-size:12.5px;letter-spacing:.1em;color:var(--blue-ink)}
-.posts .read svg{width:16px;height:16px;transition:transform .35s var(--ease)}
-.posts a:hover .read svg{transform:translate(3px,-3px)}
-.follow{margin-top:16px;font-size:15px;color:var(--ink-2)}
 
 /* plan */
 .plan{border:1.5px dashed var(--line);border-radius:var(--radius-l);padding:clamp(20px,2.8vw,30px);background:color-mix(in srgb,var(--paper) 55%,transparent)}
@@ -138,7 +126,6 @@ section{padding:clamp(26px,4.6vh,48px) 0}
 @media (max-width:760px){
   .coffee{grid-template-columns:1fr}
   .quiz{grid-template-columns:1fr}
-  .posts{grid-template-columns:1fr}
 }
 @media (max-width:600px){
   body{padding:8px}
@@ -217,28 +204,6 @@ section{padding:clamp(26px,4.6vh,48px) 0}
       </div>
     </section>
 
-    <!-- POSTS -->
-    <section aria-labelledby="posts-h">
-      <h2 class="sect-h" id="posts-h">我平常怎麼看事情<span class="rule"></span></h2>
-      <ul class="posts">
-        <li><a href="https://www.threads.com/@sid73.coach/post/Dd0nDDBFKP4" target="_blank" rel="noopener">
-          <h3>穹頂：發現問題的人，才能發明解法</h3>
-          <p>六百年前的佛羅倫斯，所有人都在算要多大的支架。有一個人問：為什麼需要支架？</p>
-          <span class="read">在 THREADS 讀<svg viewBox="0 0 24 24"><use href="#i-ne"/></svg></span>
-        </a></li>
-        <li><a href="https://www.threads.com/@sid73.coach/post/DeCF_5IFBx1" target="_blank" rel="noopener">
-          <h3>別人印好的考卷</h3>
-          <p>經理、副總、老闆——是考卷上印好的選項。想法消失，可能不是失去野心，是不想再寫那張考卷了。</p>
-          <span class="read">在 THREADS 讀<svg viewBox="0 0 24 24"><use href="#i-ne"/></svg></span>
-        </a></li>
-        <li><a href="https://www.threads.com/@sid73.coach/post/DcqJ-tNlNkN" target="_blank" rel="noopener">
-          <h3>評審席上的眼淚</h3>
-          <p>得獎的小妹妹低著頭掉眼淚。「我要的」跟「別人要我要的」，我們都還在學著分開。</p>
-          <span class="read">在 THREADS 讀<svg viewBox="0 0 24 24"><use href="#i-ne"/></svg></span>
-        </a></li>
-      </ul>
-      <p class="follow">更多在 Threads：<a href="https://www.threads.com/@sid73.coach" target="_blank" rel="noopener">@sid73.coach</a></p>
-    </section>
 
     <!-- PLAN -->
     <section aria-label="一對一教練方案">
